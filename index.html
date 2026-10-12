@@ -709,6 +709,15 @@ html.nofx .mote{display:none}
 .enx .zh{font-family:"Noto Sans SC","Noto Serif SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}.enx-zl{font-size:21px}.enx-wd.zh{font-size:22px;letter-spacing:2px}
 .enx-done-txt{font-size:18px;line-height:1.8}.enx-done-txt .ok{color:var(--a)}.enx-done-txt .no{color:var(--s);text-decoration:underline wavy}.enx-done-txt span+span::before{content:" "}
 .enx-done-txt.zh span+span::before{content:""}
+.enx-pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}.enx-pg.abc{grid-template-columns:repeat(auto-fill,minmax(72px,1fr))}
+.enx-pc{border:1.5px solid var(--l);background:var(--c);color:var(--i);border-radius:12px;padding:10px 6px;min-height:68px;font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative}
+.enx-pc b{font-size:20px;font-family:"Charis SIL","Doulos SIL","Lucida Sans Unicode","Segoe UI",system-ui,sans-serif}.enx-pc small{font-size:11.5px;color:var(--m);text-align:center;line-height:1.3}
+.enx-pc.seen::after{content:"✓";position:absolute;top:4px;right:7px;font-size:11px;color:var(--a);font-weight:800}.enx-pc.on{border-color:var(--s);box-shadow:0 0 0 2px var(--sj)}
+.enx-det{display:flex;gap:14px;align-items:flex-start}.enx-det p{margin:0 0 8px}.enx-detsym{flex:none;min-width:72px;height:72px;display:grid;place-items:center;border:2.5px solid var(--s);color:var(--s);border-radius:10px;font-size:26px;font-weight:700;padding:0 6px}
+.enx-wchips{display:flex;flex-wrap:wrap;gap:6px}.enx-wc{border:1.5px solid var(--l);background:var(--j);color:var(--i);border-radius:999px;padding:6px 12px;min-height:38px;font:inherit;font-size:15px;cursor:pointer}.enx-wc small{color:var(--m);font-size:12px}
+.enx-wc i{font-style:normal;color:var(--m);margin:0 1px}.enx-st{color:var(--s)}
+.enx-rule{display:grid;gap:6px}.enx-rule p{margin:0;color:var(--m);font-size:14px}.enx-ipa2{font-size:20px;color:var(--s)}
+.enx-opt u{text-decoration-thickness:2px;text-underline-offset:3px;font-weight:700}
 #enGo{margin-top:8px}.enlink{margin:0 0 12px}.enlinks{display:flex;gap:8px;margin:0 0 12px}.enlinks .enlink{flex:1;margin:0;font-size:13.5px;padding:10px 6px}
 #hskGo{margin:-4px 0 12px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}#hskGo .han{font-size:20px;color:var(--cinnabar,#C0392B)}#hskGo small{opacity:.7;font-weight:500}
 </style>
@@ -826,6 +835,7 @@ setTimeout(function(){if(!window.__ttOK)window.__bootErr("Game tải quá lâu (
 <!-- CĂN CƠ -->
 <section class="view" id="vBase">
   <h2>Tu luyện căn cơ</h2>
+  <button class="btn wide enlink" id="enBaseGo">🔤 Căn cơ tiếng Anh · phát âm IPA, trọng âm</button>
   <div id="baseReq"></div>
   <div class="chips" id="baseTabs"></div>
   <div id="baseBody"></div>
@@ -3093,7 +3103,7 @@ function tyCheck(){if(!TY)return;if(TY.done){typeNext();return}const v=$("tyIn")
   const acc=ok/Math.max(a.length,b.length),pass=TY.kind==="w"?cjkOnly(v)===TY.text:acc>=.9;
   $("tyDiff").innerHTML=html+`<div class="small muted">${Math.round(acc*100)}% chính xác${pass?"":" · chữ đỏ là chỗ gõ sai hoặc thiếu"}</div>`;
   TY.done=true;tyStat.n++;$("tyInfo").innerHTML=tyHintList().map(([k,v])=>`<div class="tyhint"><small>${k}</small> <b>${esc(v)}</b></div>`).join("");$("tyPy").textContent="💡 Gợi ý";checkDaily();touchStreak();if(TY.kind==="w"){learn(TY.w,pass);tyR()[TY.w.k]=pass?1:-1;if(pass)tySess.add(TY.w.k);$("tyInfo").insertAdjacentHTML("beforeend",exHTML(TY.w,1));bindEx($("tyInfo"));renderTyStats()}
-  sfx(pass?"ok":"bad");if(pass){tyStat.ok++;S.typed=(S.typed||0)+1;const st=TY.kind==="s"?2:1;S.stones+=st;S.daily.w++;fxFloat($("tyH"),`+${st} linh thạch`);$("tyIn").classList.add("ok")}else{$("tyIn").classList.add("no");shake($("tyH"));if(TY.kind==="w")S.wrong[TY.w.k]=1}
+  sfx(pass?"ok":"bad");setTimeout(()=>speak(TY.text),280);if(pass){tyStat.ok++;S.typed=(S.typed||0)+1;const st=TY.kind==="s"?2:1;S.stones+=st;S.daily.w++;fxFloat($("tyH"),`+${st} linh thạch`);$("tyIn").classList.add("ok")}else{$("tyIn").classList.add("no");shake($("tyH"));if(TY.kind==="w")S.wrong[TY.w.k]=1}
   $("tyIn").disabled=true;$("tyOk").textContent="Tiếp tục";save();renderTop();$("tyStat").textContent=`Lượt này: đúng ${tyStat.ok}/${tyStat.n}`;
   if(pass&&TY.kind!=="w")setTimeout(()=>{if(TY&&TY.done)typeNext()},900)}
 $("tyOk").onclick=tyCheck;
@@ -5211,6 +5221,85 @@ EG.push(
     ["People say that this lake is very deep. → This lake ___ very deep.",["is said to be","says to be","is said being","said to be"],"S + is said + to V."]],
  o:[[["It","is","said","that","he","is","a","genius"],["It is said that he is a genius"]],[["She","is","thought","to","be","the","best"],["She is thought to be the best"]]]}
 );
+/* Căn cơ tiếng Anh: phát âm IPA · trọng âm · đuôi -s/-ed (tự biên soạn) */
+const EB={
+vow:[["iː","i dài: kéo dài âm “i”, môi dẹt như đang cười.",["see","green","eat"]],
+ ["ɪ","i ngắn: bật nhanh, gọn, hơi giống “i” đọc ngắn.",["sit","big","ship"]],
+ ["e","e ngắn: gần giống “e” tiếng Việt.",["bed","red","pen"]],
+ ["æ","giữa “a” và “e”: miệng mở rộng sang hai bên, hàm hạ thấp.",["cat","bad","apple"]],
+ ["ɑː","a dài: miệng mở to, lưỡi hạ thấp.",["car","father","start"]],
+ ["ɒ","o ngắn (giọng Anh): tròn môi, bật nhanh.",["hot","dog","box"]],
+ ["ɔː","o dài: tròn môi, kéo dài.",["door","saw","talk"]],
+ ["ʊ","u ngắn: môi hơi tròn, bật nhanh.",["book","good","put"]],
+ ["uː","u dài: tròn môi, kéo dài.",["food","blue","school"]],
+ ["ʌ","giống “ă/â” ngắn: miệng hơi mở, không tròn môi.",["cup","bus","love"]],
+ ["ɜː","ơ dài: miệng hơi mở, kéo dài (giọng Mỹ có cong lưỡi).",["bird","work","learn"]],
+ ["ə","ơ ngắn, rất nhẹ (âm schwa): xuất hiện ở âm tiết không nhấn.",["about","teacher","banana"]]],
+dip:[["eɪ","đọc như “ây”: từ e trượt sang ɪ.",["day","make","rain"]],
+ ["aɪ","đọc như “ai”.",["my","time","light"]],
+ ["ɔɪ","đọc như “oi”.",["boy","toy","coin"]],
+ ["aʊ","đọc như “ao”.",["now","house","cow"]],
+ ["əʊ","đọc như “âu” (giọng Mỹ gần “ôu”).",["go","home","boat"]],
+ ["ɪə","đọc như “ia”.",["here","near","idea"]],
+ ["eə","đọc như “e-ơ”.",["hair","care","where"]],
+ ["ʊə","đọc như “u-ơ”.",["tour","pure","cure"]]],
+con:[["p","p bật hơi mạnh (đặt tay trước miệng thấy có hơi).",["pen","happy","stop"]],
+ ["b","b, rung dây thanh.",["ball","rabbit","job"]],
+ ["t","t bật hơi, gần “th” tiếng Việt.",["ten","water","cat"]],
+ ["d","đ nhẹ, đầu lưỡi chạm chân răng trên.",["dog","ladder","red"]],
+ ["k","k bật hơi, gần “kh” nhẹ.",["key","cake","back"]],
+ ["g","g, rung dây thanh.",["go","bigger","egg"]],
+ ["f","ph: răng trên chạm môi dưới, thổi hơi.",["fish","phone","off"]],
+ ["v","v: như f nhưng rung dây thanh.",["very","love","five"]],
+ ["θ","đầu lưỡi đặt giữa hai hàm răng, thổi hơi (không rung).",["think","three","mouth"]],
+ ["ð","như θ nhưng rung dây thanh.",["this","mother","with"]],
+ ["s","x tiếng Việt.",["see","city","bus"]],
+ ["z","như s nhưng rung dây thanh (giống tiếng ong kêu).",["zoo","rose","is"]],
+ ["ʃ","s uốn lưỡi, môi hơi chu ra (sh).",["she","nation","fish"]],
+ ["ʒ","như ʃ nhưng rung dây thanh.",["measure","television","usual"]],
+ ["h","h nhẹ, chỉ là hơi thở.",["hat","who","behind"]],
+ ["tʃ","ch bật hơi, môi chu ra.",["chair","teacher","watch"]],
+ ["dʒ","gần “gi/dj”, rung dây thanh.",["job","age","bridge"]],
+ ["m","m.",["man","summer","come"]],
+ ["n","n.",["no","dinner","sun"]],
+ ["ŋ","ng, cuối âm không bật “g”.",["sing","long","thank"]],
+ ["l","l; ở cuối từ lưỡi cong lên (l tối).",["leg","yellow","ball"]],
+ ["r","r cong lưỡi, không rung lưỡi như tiếng Việt.",["red","sorry","around"]],
+ ["w","tròn môi như “u” rồi mở ra (gần “oa/ue”).",["we","window","quick"]],
+ ["j","như “i/d” nhẹ ở đầu âm (y).",["yes","you","yellow"]]],
+abc:[["A","eɪ"],["B","biː"],["C","siː"],["D","diː"],["E","iː"],["F","ef"],["G","dʒiː"],["H","eɪtʃ"],["I","aɪ"],["J","dʒeɪ"],["K","keɪ"],["L","el"],["M","em"],["N","en"],["O","əʊ"],["P","piː"],["Q","kjuː"],["R","ɑː(r)"],["S","es"],["T","tiː"],["U","juː"],["V","viː"],["W","ˈdʌbl juː"],["X","eks"],["Y","waɪ"],["Z","zed / ziː"]],
+rules:[["Danh từ, tính từ 2 âm tiết","Thường nhấn vào âm tiết thứ nhất.",["TA-ble","HAP-py","MO-ther","GAR-den"]],
+ ["Động từ 2 âm tiết","Thường nhấn vào âm tiết thứ hai.",["be-GIN","re-LAX","de-CIDE","en-JOY"]],
+ ["Đuôi -tion, -sion, -ic, -ical, -ity, -ian, -ious","Nhấn vào âm tiết ngay trước đuôi.",["in-for-MA-tion","de-CI-sion","e-co-NO-mic","a-BI-li-ty","mu-SI-cian"]],
+ ["Đuôi -ee, -eer, -ese, -ique, -oon","Nhấn vào chính đuôi đó.",["em-ploy-EE","en-gi-NEER","Viet-nam-ESE","u-NIQUE","bal-LOON"]],
+ ["Đuôi -y, -ate, -ize/-ise (từ 3 âm tiết trở lên)","Nhấn vào âm tiết thứ 3 tính từ cuối lên.",["pho-TO-gra-phy","de-MO-cra-cy","com-MU-ni-cate","OR-ga-nize"]],
+ ["Danh từ ghép","Thường nhấn vào từ đứng đầu.",["BLACK-board","AIR-port","BOOK-shop"]],
+ ["Số đếm -teen và -ty","-teen nhấn âm cuối; -ty nhấn âm đầu.",["fif-TEEN","FIF-ty","thir-TEEN","THIR-ty"]],
+ ["Tiền tố, hậu tố thông dụng","un-, re-, dis-, -ful, -less, -ness, -ment thường không làm thay đổi trọng âm của từ gốc.",["un-HAP-py","HAP-pi-ness","em-PLOY-ment","BEAU-ti-ful"]]],
+stress:[["ta-ble",0],["hap-py",0],["mo-ther",0],["gar-den",0],["wa-ter",0],["be-gin",1],["re-lax",1],["en-joy",1],["de-cide",1],["pre-fer",1],["ho-tel",1],["Ja-pan",1],["ad-vice",1],["in-for-ma-tion",2],["e-du-ca-tion",2],["de-ci-sion",1],["e-co-no-mic",2],["a-bi-li-ty",1],["mu-si-cian",1],["em-ploy-ee",2],["en-gi-neer",2],["Viet-nam-ese",2],["black-board",0],["air-port",0],["fif-teen",1],["fif-ty",0],["pho-to-gra-phy",1],["pho-to-graph",0],["de-mo-cra-cy",1],["com-mu-ni-cate",1],["or-ga-nize",0],["im-por-tant",1],["beau-ti-ful",0],["com-pu-ter",1],["ba-na-na",1],["e-le-phant",0],["to-mor-row",1],["po-pu-lar",0],["ex-pen-sive",1],["de-ve-lop",1],["u-ni-ver-si-ty",2],["in-ter-est-ing",0],["fa-mi-ly",0],["hos-pi-tal",0],["en-vi-ron-ment",1]],
+ed:{rules:[["/ɪd/","Sau âm /t/ và /d/.",["wanted","needed","decided","visited"]],["/t/","Sau các âm vô thanh /p/, /k/, /f/, /s/, /ʃ/, /tʃ/, /θ/.",["stopped","looked","laughed","missed","washed","watched"]],["/d/","Sau các âm còn lại (nguyên âm và phụ âm hữu thanh).",["played","cleaned","lived","opened","called","cried"]]]},
+s:{rules:[["/ɪz/","Sau âm /s/, /z/, /ʃ/, /ʒ/, /tʃ/, /dʒ/.",["buses","roses","washes","watches","oranges","boxes"]],["/s/","Sau các âm vô thanh /p/, /t/, /k/, /f/, /θ/.",["cups","cats","books","laughs","months"]],["/z/","Sau các âm còn lại.",["dogs","plays","pens","trees","calls","songs"]]]},
+diff:[[["c[a]t","h[a]t","f[a]ther","b[a]d"],2,"father đọc /ɑː/, các từ còn lại /æ/."],
+ [["b[oo]k","g[oo]d","f[oo]d","l[oo]k"],2,"food đọc /uː/, còn lại /ʊ/."],
+ [["s[ea]t","m[ea]t","br[ea]d","b[ea]ch"],2,"bread đọc /e/, còn lại /iː/."],
+ [["h[ou]se","m[ou]se","c[ou]ntry","ab[ou]t"],2,"country đọc /ʌ/, còn lại /aʊ/."],
+ [["[th]ink","[th]ree","[th]is","mon[th]"],2,"this đọc /ð/, còn lại /θ/."],
+ [["[ch]air","[ch]eap","[ch]emistry","tea[ch]"],2,"chemistry đọc /k/, còn lại /tʃ/."],
+ [["st[o]p","h[o]t","g[o]","b[o]x"],2,"go đọc /əʊ/, còn lại /ɒ/."],
+ [["c[u]p","b[u]s","p[u]t","s[u]n"],2,"put đọc /ʊ/, còn lại /ʌ/."],
+ [["wash[ed]","watch[ed]","want[ed]","miss[ed]"],2,"wanted đọc /ɪd/, còn lại /t/."],
+ [["play[ed]","open[ed]","need[ed]","call[ed]"],2,"needed đọc /ɪd/, còn lại /d/."],
+ [["book[s]","cat[s]","dog[s]","cup[s]"],2,"dogs đọc /z/, còn lại /s/."],
+ [["bus[es]","box[es]","watch[es]","lik[es]"],3,"likes đọc /s/, còn lại /ɪz/."],
+ [["[h]our","[h]ouse","[h]appy","[h]ome"],0,"Chữ h trong hour là âm câm."],
+ [["ni[c]e","[c]ity","[c]at","[c]ent"],2,"cat đọc /k/, còn lại /s/."],
+ [["[g]ood","[g]et","a[g]e","[g]ame"],2,"age đọc /dʒ/, còn lại /g/."],
+ [["b[i]g","s[i]t","t[i]me","f[i]sh"],2,"time đọc /aɪ/, còn lại /ɪ/."],
+ [["w[or]d","w[or]k","w[or]ld","f[or]"],3,"for đọc /ɔː/, còn lại /ɜː/."],
+ [["n[a]me","m[a]ke","c[a]ke","c[a]r"],3,"car đọc /ɑː/, còn lại /eɪ/."],
+ [["[s]ugar","[s]ee","[s]it","[s]un"],0,"sugar đọc /ʃ/, còn lại /s/."],
+ [["kno[w]","[w]rite","[w]ater","[w]rong"],2,"water đọc /w/; w trong know, write, wrong là âm câm."]]
+};
 /* Bài đọc tiếng Anh (tự biên soạn) · phương án đầu tiên là đáp án đúng */
 const ER=[
 {id:"r1",lv:"A2",t:"My Grandmother's Garden",vi:"Khu vườn của bà tôi",
@@ -5434,7 +5523,7 @@ const RAW=JSON.parse(document.getElementById("enData").textContent);
 const W=RAW.map(([l,p,w,m,ipa,ex,exv],i)=>({i,l,p,w,m,ipa,ex,exv,k:w.toLowerCase()}));
 const LISTS=[...new Set(W.map(x=>x.l))],G=typeof EG!=="undefined"?EG:[],GROUPS=[...new Set(G.map(g=>g.g))],RD=typeof ER!=="undefined"?ER:[],LS=typeof EL!=="undefined"?EL:[];
 const KEY="hoc-en-v1";let ST;try{ST=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){ST={}}
-ST.src=ST.src||LISTS[0];ST.w=ST.w||{};ST.ty=ST.ty||{};ST.tm=ST.tm||"mean";ST.g=ST.g||{};ST.rd=ST.rd||{};ST.ls=ST.ls||{};ST.dc=ST.dc||{};ST.dsrc=ST.dsrc||"sen";ST.dp=ST.dp||{};
+ST.src=ST.src||LISTS[0];ST.w=ST.w||{};ST.ty=ST.ty||{};ST.tm=ST.tm||"mean";ST.g=ST.g||{};ST.rd=ST.rd||{};ST.ls=ST.ls||{};ST.dc=ST.dc||{};ST.dsrc=ST.dsrc||"sen";ST.dp=ST.dp||{};ST.bs=ST.bs||{};ST.bx=ST.bx!=null?ST.bx:null;ST.bt=ST.bt||"vow";
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}};
 const E=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
@@ -5464,7 +5553,7 @@ function exHTML(en,vi,blank,w){const b=blank&&w?blankOf(w):null;const t=b?`${E(b
   return`<div class="enx-ex"><div class="enx-exl"><span>${t}</span>${blank?"":`<button class="enx-say" data-say="${E(en)}" aria-label="Nghe câu">🔊</button>`}</div>${vi?`<div class="enx-exv">${E(vi)}</div>`:""}</div>`}
 const wEx=(w,blank)=>exHTML(w.ex,w.exv,blank,w);
 function bindSay(r){(r||ROOT).querySelectorAll("[data-say]").forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();say(b.dataset.say)})}
-function bindNav(){ROOT.querySelectorAll("[data-en]").forEach(b=>b.onclick=()=>{const v=b.dataset.en;stop();({home,flash:startFlash,quiz:startQuiz,type:typeHome,list:wordList,gram:gramList,rdl:()=>rlList("r"),lsl:()=>rlList("l"),dic:dicHome,out:()=>OPT.back&&OPT.back()})[v]()})}
+function bindNav(){ROOT.querySelectorAll("[data-en]").forEach(b=>b.onclick=()=>{const v=b.dataset.en;stop();({home,flash:startFlash,quiz:startQuiz,type:typeHome,list:wordList,gram:gramList,base:()=>baseHome(),rdl:()=>rlList("r"),lsl:()=>rlList("l"),dic:dicHome,out:()=>OPT.back&&OPT.back()})[v]()})}
 function srcSel(){return`<select class="enx-sel" id="enSrc" aria-label="Chọn danh sách từ">${LISTS.map(l=>`<option${l===ST.src?" selected":""}>${E(l)}</option>`).join("")}<option value="all"${ST.src==="all"?" selected":""}>Tất cả (${W.length} từ)</option></select>`}
 function bindSrc(fn){const s=$("enSrc");if(s)s.onchange=()=>{ST.src=s.value;save();TS=null;fn()}}
 function counts(L){let ok=0,no=0;L.forEach(w=>{const r=ST.ty[w.k];if(r===1)ok++;else if(r===-1)no++});return{n:L.length,ok,no,un:L.length-ok-no}}
@@ -5472,7 +5561,8 @@ const row=(go,ic,b,s)=>`<button class="enx-row" data-en="${go}"><span class="enx
 /* ---------- trang chính ---------- */
 function home(){stop();const L=words(ST.src),nl=L.filter(learned).length,c=counts(L),now=Date.now(),due=L.filter(w=>ST.w[w.k]&&ST.w[w.k].d<=now&&ST.w[w.k].s<5).length,gd=G.filter(g=>ST.g[g.id]&&ST.g[g.id].b>=5).length;
   put(H(OPT.title||"Tiếng Anh",`${W.length.toLocaleString("vi-VN")} từ vựng · ${LISTS.length} danh sách · ${G.length} cấu trúc ngữ pháp`,OPT.back?"out":"")+
-  `<h3 class="enx-h">Từ vựng</h3>${srcSel()}
+  `${typeof EB!=="undefined"?`<h3 class="enx-h">Căn cơ</h3><div class="enx-rows">${row("base","/ə/","Căn cơ tiếng Anh · phát âm IPA",`44 âm IPA, bảng chữ cái, trọng âm, đuôi -s/-ed · đã nghe ${Object.keys(ST.bs).length}/70${ST.bx!=null?` · bài thi cao nhất ${ST.bx}/20`:""}`)}</div>`:""}
+  <h3 class="enx-h">Từ vựng</h3>${srcSel()}
   <div class="enx-card enx-stat"><div><b>${nl}</b><small>đã nhớ / ${L.length}</small></div><div><b class="ok">${c.ok}</b><small>gõ đúng</small></div><div><b class="no">${c.no}</b><small>gõ sai</small></div><div><b>${c.un}</b><small>chưa gõ</small></div></div>
   <div class="enx-rows">${row("flash","Aa","Thẻ ghi nhớ",`${due?`${due} từ đến hạn ôn, `:""}lật thẻ xem nghĩa, phiên âm, câu ví dụ`)}${row("quiz","✓","Kiểm tra 10 câu","Chọn nghĩa, chọn từ, nghe chọn từ, điền từ vào câu")}
   ${row("type","⌨","Luyện gõ tiếng Anh","Gõ theo nghĩa, nghe rồi gõ, điền vào câu · gõ lại từ sai")}${row("list","≡","Danh sách từ","Tra cứu, nghe phát âm và câu ví dụ")}</div>
@@ -5527,11 +5617,11 @@ function drawType(){const L=words(ST.src),c=counts(L),cur=TS.cur;
   const prompt=m==="mean"?`<div class="enx-mean">${E(w.m)}</div>${w.p?`<div class="enx-ipa"><i>${E(w.p)}</i></div>`:""}`:m==="ear"?`<div class="enx-btns c"><button class="enx-btn enx-ear" id="tyEar">🔊 Nghe từ</button><button class="enx-btn" id="tySlow">🐢 Nghe chậm</button></div>`:wEx(w,true);
   put(head+`<div class="enx-card enx-type"><p class="enx-ask">${m==="mean"?"Gõ từ tiếng Anh có nghĩa:":m==="ear"?"Nghe và gõ lại từ bạn nghe được:":"Gõ từ còn thiếu trong câu:"}</p>${prompt}
    <div class="enx-hint" id="tyH" aria-live="polite"></div>
-   <input class="enx-in" id="tyIn" lang="en" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Gõ tiếng Anh…" aria-label="Gõ từ tiếng Anh">
+   <input class="enx-in" id="enTyIn" lang="en" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Gõ tiếng Anh…" aria-label="Gõ từ tiếng Anh">
    <div id="tyRes" aria-live="polite"></div>
    <div class="enx-btns"><button class="enx-btn" id="tyHint">💡 Gợi ý (0/3)</button><button class="enx-btn pri" id="tyOk">Kiểm tra</button></div>
    <button class="enx-skip" id="tySkip">Bỏ qua từ này ›</button></div><p class="enx-note">Còn ${left} từ trong lượt này. Gõ xong bấm Enter. Không phân biệt chữ hoa, chữ thường.</p>`);
-  bindTop();const inp=$("tyIn");
+  bindTop();const inp=$("enTyIn");
   if(m==="ear"){$("tyEar").onclick=()=>say(w.w);$("tySlow").onclick=()=>say(w.w,.55);setTimeout(()=>say(w.w),300)}
   const hints=()=>[`Chữ cái đầu: <b>${E(letters(w,1))}</b> (${w.w.replace(/[^A-Za-z]/g,"").length} chữ cái)`,m==="ear"?`Nghĩa: <b>${E(w.m)}</b>`:`Phiên âm: <b>${E(w.ipa)}</b> <button class="enx-say" data-say="${E(w.w)}" aria-label="Nghe">🔊</button>`,`Gần đủ: <b>${E(letters(w,Math.ceil(w.w.length*.6)))}</b>`];
   $("tyHint").onclick=()=>{if(cur.done||cur.h>=3)return;cur.h++;$("tyH").innerHTML=hints().slice(0,cur.h).map(x=>`<div>${x}</div>`).join("");bindSay($("tyH"));$("tyHint").textContent=cur.h<3?`💡 Gợi ý (${cur.h}/3)`:"💡 Đã hiện hết"};
@@ -5650,7 +5740,7 @@ function drawDic(){const c=dicCount(),cur=DS.cur;
     const al=lcs(a,tg),good=al.filter(x=>x[0]==="ok").length,ok=good===tg.length&&a.length===tg.length;cur.done=true;ST.dc[w.k]=ok?1:-1;save();ans(ok,"dict");if(ok)DS.seen.add(w.k);
     inp.classList.add(ok?"ok":"no");inp.disabled=true;$("dcOk").textContent="Câu tiếp ›";$("dcHint").disabled=true;$("dcSkip").style.display="none";
     $("dcRes").innerHTML=`<div class="enx-fb ${ok?"ok":"no"}"><b>${ok?"Chính xác!":`Đúng ${good}/${tg.length} từ`}</b>${ok?"":`<div class="enx-wd">${al.map(([k,t])=>`<span class="${k}">${E(t)}</span>`).join(" ")}</div><div class="enx-mut small">Xanh: đúng · đỏ gạch: thừa/sai · đỏ gạch chân: còn thiếu</div>`}${wEx(w)}</div>`;
-    bindSay($("dcRes"));const c2=dicCount();$("dcSt").innerHTML=dstat(c2);const r=$("dcRetry");if(r&&!DS.retry){r.disabled=!c2.no;r.textContent=`↻ Chép lại câu sai (${c2.no})`}setTimeout(()=>$("dcOk").focus(),30)};
+    bindSay($("dcRes"));say(w.ex);const c2=dicCount();$("dcSt").innerHTML=dstat(c2);const r=$("dcRetry");if(r&&!DS.retry){r.disabled=!c2.no;r.textContent=`↻ Chép lại câu sai (${c2.no})`}setTimeout(()=>$("dcOk").focus(),30)};
   $("dcOk").onclick=check;inp.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();check()}};
   $("dcSkip").onclick=()=>{DS.seen.add(w.k);dicNext()};setTimeout(()=>{try{inp.focus({preventScroll:true})}catch(e){}},80)}
 
@@ -5678,7 +5768,7 @@ function dpDraw(){const d=DP,k=d.k,n=d.ss.length;if(k>=n)return dpEnd();const c=
   const check=()=>{if(d.done){d.k++;return dpDraw()}const a=toks(inp.value);if(!a.length){T("Hãy gõ câu bạn nghe được");return inp.focus()}
     const al=lcs(a,tg),good=al.filter(x=>x[0]==="ok").length,ok=good===tg.length&&a.length===tg.length;d.done=true;d.res[k]=ok;ans(ok,"dict");
     inp.classList.add(ok?"ok":"no");inp.disabled=true;$("dpHint").disabled=true;$("dpOk").textContent=k<n-1?"Câu tiếp ›":"Xem kết quả";
-    $("dpRes").innerHTML=`<div class="enx-fb ${ok?"ok":"no"}"><b>${ok?"Chính xác!":`Đúng ${good}/${tg.length} từ`}</b>${ok?"":`<div class="enx-wd">${al.map(([q,t])=>`<span class="${q}">${E(t)}</span>`).join(" ")}</div>`}${exHTML(c.t,c.vi)}</div>`;bindSay($("dpRes"));setTimeout(()=>$("dpOk").focus(),30)};
+    $("dpRes").innerHTML=`<div class="enx-fb ${ok?"ok":"no"}"><b>${ok?"Chính xác!":`Đúng ${good}/${tg.length} từ`}</b>${ok?"":`<div class="enx-wd">${al.map(([q,t])=>`<span class="${q}">${E(t)}</span>`).join(" ")}</div>`}${exHTML(c.t,c.vi)}</div>`;bindSay($("dpRes"));playLines([[c.sp,c.t]]);setTimeout(()=>$("dpOk").focus(),30)};
   $("dpOk").onclick=check;inp.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();check()}};setTimeout(()=>{try{inp.focus({preventScroll:true})}catch(e){}},80)}
 function dpEnd(){const d=DP,n=d.ss.length,ok=d.res.filter(Boolean).length,pc=Math.round(ok/n*100);ST.dp[d.r.id]=Math.max(ST.dp[d.r.id]||0,pc);save();OPT.onDone&&OPT.onDone("dict",ok,n);
   const L=d.kind==="rd"?RD:LS,idx=L.indexOf(d.r);
@@ -5687,8 +5777,55 @@ function dpEnd(){const d=DP,n=d.ss.length,ok=d.res.filter(Boolean).length,pc=Mat
    <div class="enx-card enx-done-txt">${d.ss.map((x,i)=>`<span class="${d.res[i]?"ok":"no"}">${E(x.t)}</span>`).join("")}</div>
    <div class="enx-btns"><button class="enx-btn pri" id="dpAgain">Chép lại bài này</button><button class="enx-btn" id="dpNext" ${idx<L.length-1?"":"disabled"}>Bài tiếp ›</button></div>`);
   $("dpBack").onclick=dpList;$("dpAgain").onclick=()=>{DP={...d,k:0,res:[]};dpDraw()};$("dpNext").onclick=()=>{const r=L[idx+1];DP={kind:d.kind,r,ss:dpSents(d.kind,r),k:0,res:[],h:0,done:false};dpDraw()}}
+/* ---------- CĂN CƠ TIẾNG ANH ---------- */
+const BT=[["vow","Nguyên âm"],["con","Phụ âm"],["abc","Bảng chữ cái"],["str","Trọng âm"],["end","Đuôi -s/-ed"],["prac","Luyện tập"],["exam","📝 Bài thi"]];
+const ul=w=>E(w).replace(/\[(.+?)\]/g,"<u>$1</u>");
+const stressHTML=w=>w.split("-").map(x=>x===x.toUpperCase()&&/[A-Z]/.test(x)?`<b class="enx-st">${E(x)}</b>`:E(x)).join("<i>·</i>");
+let BSEL=null;
+const IPAW=(()=>{const m={};W.forEach(w=>{if(!w.k.includes(" ")&&w.ipa)m[w.k]=w.ipa});return m})();
+const wipa=w=>IPAW[w.toLowerCase()]||"";
+function baseHome(tab){stop();if(tab)ST.bt=tab;const t=ST.bt;save();
+  const seen=Object.keys(ST.bs).length;let body="";
+  const card=(k,sym,ex)=>`<button class="enx-pc${ST.bs[k]?" seen":""}${BSEL===k?" on":""}" data-pc="${k}"><b>/${E(sym)}/</b><small>${E(ex.join(", "))}</small></button>`;
+  const detail=list=>{if(!BSEL)return`<p class="enx-note">Chạm vào một âm để nghe ví dụ và xem cách phát âm.</p>`;const it=list.find(x=>"s:"+x[0]===BSEL);if(!it)return`<p class="enx-note">Chạm vào một âm để nghe ví dụ và xem cách phát âm.</p>`;
+    return`<div class="enx-card enx-det"><div class="enx-detsym">/${E(it[0])}/</div><div><p>${E(it[1])}</p><div class="enx-wchips">${it[2].map(w=>`<button class="enx-wc" data-say="${E(w)}">🔊 ${E(w)}${wipa(w)?` <small>${E(wipa(w))}</small>`:""}</button>`).join("")}</div></div></div>`};
+  if(t==="vow")body=detail(EB.vow.concat(EB.dip))+`<h3 class="enx-h">Nguyên âm đơn (12)</h3><div class="enx-pg">${EB.vow.map(x=>card("s:"+x[0],x[0],x[2])).join("")}</div><h3 class="enx-h">Nguyên âm đôi (8)</h3><div class="enx-pg">${EB.dip.map(x=>card("s:"+x[0],x[0],x[2])).join("")}</div>`;
+  if(t==="con")body=detail(EB.con)+`<h3 class="enx-h">Phụ âm (24)</h3><div class="enx-pg">${EB.con.map(x=>card("s:"+x[0],x[0],x[2])).join("")}</div><p class="enx-note">Mẹo: âm vô thanh (p, t, k, f, θ, s, ʃ, tʃ) chỉ có hơi; âm hữu thanh (b, d, g, v, ð, z, ʒ, dʒ) làm rung cổ họng khi đặt tay lên.</p>`;
+  if(t==="abc")body=`<div class="enx-pg abc">${EB.abc.map(([l,i])=>`<button class="enx-pc${ST.bs["a:"+l]?" seen":""}" data-abc="${l}"><b>${l} ${l.toLowerCase()}</b><small>/${E(i)}/</small></button>`).join("")}</div><p class="enx-note">Chạm vào chữ cái để nghe tên chữ. Dùng để đánh vần tên, email, địa chỉ.</p>`;
+  if(t==="str")body=`<p class="enx-note">Trọng âm là âm tiết được đọc to, rõ và dài hơn. Âm tiết in đậm là âm được nhấn. Chạm vào từ để nghe.</p>`+EB.rules.map(([h,d,ex],i)=>`<div class="enx-card enx-rule"><b>${i+1}. ${E(h)}</b><p>${E(d)}</p><div class="enx-wchips">${ex.map(w=>`<button class="enx-wc" data-say="${E(w.replace(/-/g,""))}">${stressHTML(w)}</button>`).join("")}</div></div>`).join("")+`<p class="enx-note">Đây là quy tắc thường gặp; vẫn có ngoại lệ (ví dụ ho-TEL, Ja-PAN), nên hãy nghe và tra từ điển khi gặp từ mới.</p>`;
+  if(t==="end")body=[["Cách đọc đuôi -ed",EB.ed.rules],["Cách đọc đuôi -s / -es",EB.s.rules]].map(([h,rs])=>`<h3 class="enx-h">${h}</h3>`+rs.map(([sym,d,ex])=>`<div class="enx-card enx-rule"><b class="enx-ipa2">${E(sym)}</b><p>${E(d)}</p><div class="enx-wchips">${ex.map(w=>`<button class="enx-wc" data-say="${E(w)}">🔊 ${E(w)}</button>`).join("")}</div></div>`).join("")).join("")+`<p class="enx-note">Mẹo nhớ các âm vô thanh trước đuôi: “<b>Thời phong kiến phương Tây chỉ sang sông</b>” (th, p, k, f, t, ch, s, sh).</p>`;
+  if(t==="prac")body=`<div class="enx-card enx-done"><b>Luyện tập 10 câu</b><p class="enx-mut">Chọn từ có phần gạch chân phát âm khác, tìm trọng âm, cách đọc đuôi -s/-ed, chọn phiên âm đúng. Có đáp án và giải thích ngay.</p><button class="enx-btn pri wide" id="bGo">Bắt đầu luyện tập</button></div>`;
+  if(t==="exam")body=`<div class="enx-card enx-done"><b>Bài thi căn cơ · 20 câu</b><p class="enx-mut">Làm hết 20 câu rồi mới xem kết quả. Đạt từ 16/20 là vững căn cơ phát âm.</p>${ST.bx!=null?`<p>Điểm cao nhất: <b>${ST.bx}/20</b> ${ST.bx>=16?"✅":""}</p>`:""}<button class="enx-btn pri wide" id="bGo">Bắt đầu bài thi</button></div>`;
+  put(H("Căn cơ tiếng Anh",`Phát âm IPA, trọng âm, đuôi -s/-ed · đã nghe ${seen}/70`,"home")+`<div class="enx-chips">${BT.map(([k,n])=>`<button class="enx-chip${k===t?" on":""}" data-bt="${k}">${n}</button>`).join("")}</div>`+body);
+  bindNav();bindSay();ROOT.querySelectorAll("[data-bt]").forEach(b=>b.onclick=()=>{BSEL=null;baseHome(b.dataset.bt)});
+  ROOT.querySelectorAll("[data-pc]").forEach(b=>b.onclick=()=>{const k=b.dataset.pc,it=EB.vow.concat(EB.dip,EB.con).find(x=>"s:"+x[0]===k);BSEL=k;ST.bs[k]=1;save();baseHome();say(it[2].join(". "),.8)});
+  ROOT.querySelectorAll("[data-abc]").forEach(b=>b.onclick=()=>{ST.bs["a:"+b.dataset.abc]=1;save();b.classList.add("seen");say(b.dataset.abc,.8)});
+  const g=$("bGo");if(g)g.onclick=()=>baseQuiz(t==="exam"?20:10,t==="exam")}
+function bq(kind){const r=a=>a[Math.random()*a.length|0];
+  if(kind==="diff"){const [ws,a,why]=r(EB.diff);return{ask:"Chọn từ có phần gạch chân được phát âm khác với các từ còn lại",opts:ws.map(ul),a,why,say:ws.map(w=>w.replace(/[\[\]]/g,"")).join(". ")}}
+  if(kind==="str"){const [w,a]=r(EB.stress),sy=w.split("-");return{ask:`Trọng âm của từ <b>${E(w.replace(/-/g,""))}</b> rơi vào âm tiết nào?`,opts:sy.map((x,i)=>`Âm ${i+1}: ${E(x)}`),a,why:`Đọc là ${sy.map((x,i)=>i===a?x.toUpperCase():x).join("-")}.`,say:w.replace(/-/g,"")}}
+  if(kind==="ed"||kind==="s"){const rs=(kind==="ed"?EB.ed:EB.s).rules,ri=Math.random()*3|0,w=r(rs[ri][2]);return{ask:`Đuôi <b>${kind==="ed"?"-ed":"-s/-es"}</b> trong từ <b>${E(w)}</b> được đọc là?`,opts:rs.map(x=>E(x[0])),a:ri,why:rs[ri][1],say:w}}
+  const ks=Object.keys(IPAW),w=r(ks),o=new Set([IPAW[w]]);let g=0;while(o.size<4&&g++<50)o.add(IPAW[r(ks)]);const opts=sh([...o]);return{ask:`Chọn phiên âm đúng của từ <b>${E(w)}</b>`,opts:opts.map(E),a:opts.indexOf(IPAW[w]),why:`${w} ${IPAW[w]}`,say:w}}
+function baseQuiz(n,exam){const kinds=["diff","diff","str","str","ed","s","ipa"];const qs=[];const seen=new Set();let g=0;
+  while(qs.length<n&&g++<400){const q=bq(kinds[qs.length%kinds.length]);const key=q.ask+q.opts.join();if(seen.has(key))continue;seen.add(key);qs.push(q)}
+  SE={qs:sh(qs),i:0,ok:0,exam,ans:[]};drawBq()}
+function drawBq(){const s=SE,q=s.qs[s.i],n=s.qs.length;
+  put(H(s.exam?"Bài thi căn cơ":"Luyện tập căn cơ",`Câu ${s.i+1}/${n}${s.exam?"":` · đúng ${s.ok}`}`,"base")+`<div class="enx-bar"><i style="width:${s.i/n*100}%"></i></div>
+   <div class="enx-card enx-q"><p class="enx-ask" style="text-align:center">${q.ask}</p>${q.say?`<button class="enx-btn" id="bqSay">🔊 Nghe</button>`:""}</div>
+   <div class="enx-opts${q.opts.length>4?" one":""}">${q.opts.map((o,i)=>`<button class="enx-opt" data-o="${i}">${o}</button>`).join("")}</div><div id="bqFb"></div>`);
+  bindNav();if($("bqSay"))$("bqSay").onclick=()=>say(q.say,.85);let lock=false;
+  ROOT.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{if(lock)return;lock=true;const i=+b.dataset.o,ok=i===q.a;if(ok)s.ok++;s.ans[s.i]=i;ans(ok,"base");
+    if(s.exam){s.i++;return s.i>=n?bqEnd():drawBq()}
+    ROOT.querySelectorAll("[data-o]").forEach(x=>{x.disabled=true;const j=+x.dataset.o;if(j===q.a)x.classList.add("ok");else if(x===b)x.classList.add("no")});
+    $("bqFb").innerHTML=`<div class="enx-fb ${ok?"ok":"no"}"><b>${ok?"Chính xác!":"Chưa đúng."}</b> 💡 ${E(q.why)}</div><button class="enx-btn pri wide" id="bqNx">${s.i<n-1?"Câu tiếp ›":"Xem kết quả"}</button>`;
+    if(q.say)say(q.say,.85);$("bqNx").onclick=()=>{s.i++;if(s.i>=n)bqEnd();else drawBq()}})}
+function bqEnd(){const s=SE,n=s.qs.length;if(s.exam){ST.bx=Math.max(ST.bx||0,s.ok);save()}OPT.onDone&&OPT.onDone(s.exam?"baseExam":"base",s.ok,n);
+  put(H(s.exam?"Kết quả bài thi":"Kết quả luyện tập","Căn cơ tiếng Anh","base")+`<div class="enx-card enx-done"><div class="enx-big">${s.ok}/${n}</div><b>${s.exam?(s.ok>=16?"Đạt! Căn cơ phát âm vững vàng.":"Chưa đạt 16/20, hãy ôn lại và thi lại nhé."):(s.ok>=8?"Tốt lắm!":"Cần ôn thêm")}</b>
+   <div class="enx-btns"><button class="enx-btn pri" id="bqAgain">${s.exam?"Thi lại":"Luyện tiếp"}</button><button class="enx-btn" data-en="base">Về căn cơ</button></div></div>
+   ${s.exam?`<h3 class="enx-h">Xem lại</h3>`+s.qs.map((q,i)=>`<div class="enx-card enx-rq"><p class="enx-ask">${i+1}. ${q.ask}</p><div class="enx-why"><span class="${s.ans[i]===q.a?"ok":"no"}">${s.ans[i]===q.a?"✓":"✗"}</span> Đáp án: ${q.opts[q.a]} · ${E(q.why)}</div></div>`).join(""):""}`);
+  bindNav();$("bqAgain").onclick=()=>baseQuiz(n,s.exam)}
 function stop(){PL++;window.speechSynthesis&&speechSynthesis.cancel()}
-return{mount(el,opt){ROOT=el;OPT=opt||{};home()},stop,open(v){({type:typeHome,gram:gramList,home,read:()=>rlList("r"),listen:()=>rlList("l"),dict:dicHome})[v||"home"]()},W,G,_st:()=>({ST,TS,SE})}})();
+return{mount(el,opt){ROOT=el;OPT=opt||{};home()},stop,open(v){({base:()=>baseHome(),type:typeHome,gram:gramList,home,read:()=>rlList("r"),listen:()=>rlList("l"),dict:dicHome})[v||"home"]()},W,G,_st:()=>({ST,TS,SE})}})();
 /* ---------- NGHE CHÉP CHÍNH TẢ TIẾNG TRUNG (module dùng chung) ---------- */
 const ZDX=(()=>{
 const D=JSON.parse(document.getElementById("zdData").textContent);
@@ -5741,7 +5878,7 @@ function draw(){if(ST.src==="psg")return psgList();const c=counts(),cur=DS.cur;
     inp.classList.add(ok?"ok":"no");inp.disabled=true;$("zdOk").textContent="Câu tiếp ›";$("zdHint").disabled=true;$("zdSkip").style.display="none";
     $("zdRes").innerHTML=`<div class="enx-fb ${ok?"ok":"no"}"><b>${ok?"Chính xác!":`Đúng ${good}/${total} ${m==="han"||/[\u3400-\u9fff]/.test(raw)?"chữ":"chữ cái"}`}</b>${ok?"":`<div class="enx-wd zh">${res.map(([k,t])=>`<span class="${k}">${E(t)}</span>`).join("")}</div><div class="enx-mut small">Xanh: đúng · đỏ gạch: thừa/sai · đỏ gạch chân: còn thiếu</div>`}
       <div class="enx-ex"><div class="enx-exl"><span class="zh enx-zl">${E(w.z)}</span><button class="enx-say" id="zdAgain" aria-label="Nghe lại">🔊</button></div><div class="enx-exv">${E(w.p)}</div><div class="enx-exv">${E(w.v)}</div></div></div>`;
-    $("zdAgain").onclick=()=>say(w.z);const c2=counts();$("zdSt").innerHTML=stat(c2);const r=$("zdRetry");if(r&&!DS.retry){r.disabled=!c2.no;r.textContent=`↻ Chép lại câu sai (${c2.no})`}setTimeout(()=>$("zdOk").focus(),30)};
+    $("zdAgain").onclick=()=>say(w.z);say(w.z);const c2=counts();$("zdSt").innerHTML=stat(c2);const r=$("zdRetry");if(r&&!DS.retry){r.disabled=!c2.no;r.textContent=`↻ Chép lại câu sai (${c2.no})`}setTimeout(()=>$("zdOk").focus(),30)};
   $("zdOk").onclick=check;inp.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();check()}};
   $("zdSkip").onclick=()=>{DS.seen.add(w.k);next()};setTimeout(()=>{try{inp.focus({preventScroll:true})}catch(e){}},80)}
 
@@ -5776,7 +5913,7 @@ function psgDraw(){const p=PS.p,k=PS.k,n=p.s.length,m=ST.m;
     else{const a=py(raw);if(!a){T("Hãy gõ pinyin");return inp.focus()}ok=pyMatch(a,opts);const t=opts.split(" ").map(x=>x.split("/")[0]).join("");res=ok?[...a].map(x=>["ok",x]):diff([...a],[...t]);unit="chữ cái"}
     PS.done=true;PS.res[k]=ok;try{OPT.onAnswer&&OPT.onAnswer(ok)}catch(e){}const good=res.filter(x=>x[0]==="ok").length,total=res.filter(x=>x[0]!=="extra").length;
     inp.classList.add(ok?"ok":"no");inp.disabled=true;$("psHint").disabled=true;$("psOk").textContent=k<n-1?"Câu tiếp ›":"Xem kết quả";
-    $("psRes").innerHTML=`<div class="enx-fb ${ok?"ok":"no"}"><b>${ok?"Chính xác!":`Đúng ${good}/${total} ${unit}`}</b>${ok?"":`<div class="enx-wd zh">${res.map(([q,t])=>`<span class="${q}">${E(t)}</span>`).join("")}</div>`}<div class="enx-ex"><div class="enx-exl"><span class="zh enx-zl">${E(z)}</span></div><div class="enx-exv">${E(disp)}</div></div></div>`;setTimeout(()=>$("psOk").focus(),30)};
+    $("psRes").innerHTML=`<div class="enx-fb ${ok?"ok":"no"}"><b>${ok?"Chính xác!":`Đúng ${good}/${total} ${unit}`}</b>${ok?"":`<div class="enx-wd zh">${res.map(([q,t])=>`<span class="${q}">${E(t)}</span>`).join("")}</div>`}<div class="enx-ex"><div class="enx-exl"><span class="zh enx-zl">${E(z)}</span></div><div class="enx-exv">${E(disp)}</div></div></div>`;say(z);setTimeout(()=>$("psOk").focus(),30)};
   $("psOk").onclick=check;inp.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();check()}};setTimeout(()=>{try{inp.focus({preventScroll:true})}catch(e){}},80)}
 function psgEnd(){const p=PS.p,n=p.s.length,ok=PS.res.filter(Boolean).length,pc=Math.round(ok/n*100);ST.pb[p.i]=Math.max(ST.pb[p.i]||0,pc);save();OPT.onDone&&OPT.onDone("dict",ok,n);
   const L=PD.filter(q=>q.l===p.l),idx=L.indexOf(p);
@@ -5797,7 +5934,7 @@ function openEn(page){const from=curView&&curView!=="vEn"?curView:enFrom;enFrom=
 function openZd(){showView("vZd");const bt=document.querySelector('.tabs [data-v="vWrite"]');bt&&bt.classList.add("on");
   ZDX.mount($("zdBody"),{toast,title:"Nghe chép chính tả",back:()=>document.querySelector('.tabs [data-v="vWrite"]').click(),rate:()=>.85,onAnswer(ok){const g=giveQi(ok);if(ok)S.stones+=1;save();renderTop();if(ok&&g>0&&Math.random()<.25)toast(`+${g} linh khí`)}})}
 $("zdGo").onclick=openZd;
-$("enGo").onclick=()=>openEn("home");$("enTyGo").onclick=()=>openEn("type");$("enGrGo").onclick=()=>openEn("gram");
+$("enGo").onclick=()=>openEn("home");$("enBaseGo").onclick=()=>openEn("base");$("enTyGo").onclick=()=>openEn("type");$("enGrGo").onclick=()=>openEn("gram");
 
 /* ---------- TRÂN BẢO CÁC ---------- */
 let SHT="char";
@@ -6314,6 +6451,7 @@ const GUIDE=makeGuide({id:"tutien",where:"❓ trên thanh trên cùng",pages:[
  "<b>Tàng Kinh Các</b>: tra từ theo chữ Hán, pinyin hoặc nghĩa, có câu ví dụ; mục <b>Sách cổ</b> có truyện song ngữ Trung – Việt."]},
 {z:"英",t:"Tây Vực Anh Ngữ · tiếng Anh",s:"1.494 từ vựng theo List và 37 cấu trúc ngữ pháp",li:[
  "Mở bằng nút <b>🌐 Tây Vực Anh Ngữ</b> ở Tu luyện, nút <b>🔤 Luyện gõ tiếng Anh</b> ở Luyện gõ, hoặc <b>📘 Ngữ pháp tiếng Anh</b> ở Công pháp.",
+ "<b>Căn cơ tiếng Anh</b> (nút 🔤 ở tab Căn cơ): 44 âm IPA, bảng chữ cái, trọng âm, đuôi -s/-ed, luyện tập và bài thi.",
  "<b>Từ vựng</b>: thẻ ghi nhớ, kiểm tra 10 câu, danh sách từ; mỗi từ có phiên âm và câu ví dụ Anh – Việt.",
  "<b>Luyện gõ tiếng Anh</b>: gõ theo nghĩa, nghe rồi gõ, điền vào câu; xem số từ gõ đúng, sai, chưa gõ và <b>Gõ lại từ sai</b>.",
  "<b>Đọc · Nghe</b>: 12 bài đọc, 12 bài nghe có bản dịch và câu hỏi, cùng phần <b>nghe chép chính tả</b> tiếng Anh theo câu ví dụ hoặc theo từng bài đọc, bài nghe.",
